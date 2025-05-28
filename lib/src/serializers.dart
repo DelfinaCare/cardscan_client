@@ -138,6 +138,7 @@ part 'serializers.g.dart';
   WebsocketError,
 ])
 Serializers serializers = (_$serializers.toBuilder()
+      ..addPlugin(StandardJsonPlugin())
       ..add(const OneOfSerializer())
       ..add(const AnyOfSerializer())
       ..add(const DateSerializer())
