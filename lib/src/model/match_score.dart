@@ -13,7 +13,7 @@ part 'match_score.g.dart';
 ///
 /// Properties:
 /// * [value] - The matching score value of the card.
-/// * [scores] 
+/// * [scores]
 @BuiltValue()
 abstract class MatchScore implements Built<MatchScore, MatchScoreBuilder> {
   /// The matching score value of the card.
@@ -68,7 +68,9 @@ class _$MatchScoreSerializer implements PrimitiveSerializer<MatchScore> {
     MatchScore object, {
     FullType specifiedType = FullType.unspecified,
   }) {
-    return _serializeProperties(serializers, object, specifiedType: specifiedType).toList();
+    return _serializeProperties(serializers, object,
+            specifiedType: specifiedType)
+        .toList();
   }
 
   void _deserializeProperties(
@@ -91,11 +93,14 @@ class _$MatchScoreSerializer implements PrimitiveSerializer<MatchScore> {
           result.value = valueDes;
           break;
         case r'scores':
-          final valueDes = serializers.deserialize(
-            value,
-            specifiedType: const FullType(BuiltList, [FullType(num)]),
-          ) as BuiltList<num>;
-          result.scores.replace(valueDes);
+          if (value is Iterable) {
+            final parsedScores = value.map((e) {
+              if (e is num) return e;
+              if (e is String) return num.tryParse(e) ?? 0;
+              return 0;
+            }).toList();
+            result.scores.replace(BuiltList<num>(parsedScores));
+          }
           break;
         default:
           unhandled.add(key);
@@ -125,4 +130,3 @@ class _$MatchScoreSerializer implements PrimitiveSerializer<MatchScore> {
     return result.build();
   }
 }
-
